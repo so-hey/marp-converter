@@ -49,7 +49,7 @@ func setupApiRoutes(app *fiber.App) {
 
 	api.Post("/convertmd", convertMd)
 	api.Post("/convertpdf", convertPdf)
-	api.Post("convertpptx", convertPptx)
+	api.Post("/convertpptx", convertPptx)
 }
 
 func convertMd(c *fiber.Ctx) error {
