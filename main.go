@@ -47,12 +47,12 @@ func main() {
 func setupApiRoutes(app *fiber.App) {
 	api := app.Group("/api")
 
-	api.Post("/convertmd", convertMd)
-	api.Post("/convertpdf", convertPdf)
-	api.Post("/convertpptx", convertPptx)
+	api.Post("/convertmd", convertMD)
+	api.Post("/convertpdf", convertPDF)
+	api.Post("/convertpptx", convertPPTX)
 }
 
-func convertMd(c *fiber.Ctx) error {
+func convertMD(c *fiber.Ctx) error {
 	requestBody := string(c.Body())
 	var jsonBody map[string]interface{}
 
@@ -74,7 +74,7 @@ func convertMd(c *fiber.Ctx) error {
 	return c.SendFile(mdFilePath)
 }
 
-func convertPdf(c *fiber.Ctx) error {
+func convertPDF(c *fiber.Ctx) error {
 	requestBody := string(c.Body())
 	var jsonBody map[string]interface{}
 
@@ -95,7 +95,7 @@ func convertPdf(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Failed to write md file")
 	}
 
-	cmd := exec.Command("npx", "@marp-team/marp-cli", "--theme", themeFilePath, "--html", "--pdf", mdFilePath, "-o", pdfFilePath)
+	cmd := exec.Command("npx", "@marp-team/marp-cli@latest", "--theme", themeFilePath, "--html", "--pdf", mdFilePath, "-o", pdfFilePath)
 	err = cmd.Run()
 	if err != nil {
 		return c.Status(500).SendString(fmt.Sprintf("Failed to convert to PDF: \n%v", err))
@@ -105,7 +105,7 @@ func convertPdf(c *fiber.Ctx) error {
 	return c.SendFile(pdfFilePath)
 }
 
-func convertPptx(c *fiber.Ctx) error {
+func convertPPTX(c *fiber.Ctx) error {
 	requestBody := string(c.Body())
 	var jsonBody map[string]interface{}
 
@@ -126,10 +126,10 @@ func convertPptx(c *fiber.Ctx) error {
 		return c.Status(500).SendString("Failed to write md file")
 	}
 
-	cmd := exec.Command("npx", "@marp-team/marp-cli", "--theme", themeFilePath, "--html", "--pptx", mdFilePath, "-o", pptxFilePath)
+	cmd := exec.Command("npx", "@marp-team/marp-cli@latest", "--theme", themeFilePath, "--html", "--pptx", mdFilePath, "-o", pptxFilePath)
 	err = cmd.Run()
 	if err != nil {
-		return c.Status(500).SendString(fmt.Sprintf("Failed to convert to PDF: \n%v", err))
+		return c.Status(500).SendString(fmt.Sprintf("Failed to convert to PPTX: \n%v", err))
 	}
 
 	c.Set("Content-Type", "application/vnd.openxmlformats-officedocument.presentationml.presentation")
